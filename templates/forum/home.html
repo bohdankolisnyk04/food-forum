@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <h1 class="text-center mb-5" style="font-weight: bold; color: #333;">
+        🍲 Top Recipes
+    </h1>
+
+    <div class="mb-4 text-center">
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'forum:recipe-add' %}" class="btn btn-primary me-2">➕ Add Recipe</a>
+        <a href="{% url 'forum:product-add' %}" class="btn btn-success">➕ Add Product</a>
+    {% endif %}
+    </div>
+
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-lg rounded-3 h-100">
+
+                {% if recipe.image %}
+                <img src="{{ recipe.image.url }}" class="card-img-top" alt="{{ recipe.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                <img src="{% static 'images/default_recipe.jpg' %}" class="card-img-top" alt="Default Image" style="height: 200px; object-fit: cover;">
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                    <a href="{% url 'forum:recipe-detail' recipe.pk %}">{{ recipe.title }}</a>
+                    </h5>
+                    <p class="card-text text-muted">{{ recipe.description|truncatewords:20 }}</p>
+
+                    <p class="mt-auto fw-bold">Rating: {{ recipe.rating }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center text-muted">No recipes yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

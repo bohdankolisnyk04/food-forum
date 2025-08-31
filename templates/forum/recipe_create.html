@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 700px;">
+    <h2 class="mb-4 text-center">🍲 Add New Recipe</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.title.id_for_label }}">Title</label>
+            {{ form.title }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.description.id_for_label }}">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.recipe_text.id_for_label }}">Instructions</label>
+            {{ form.recipe_text }}
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label" for="{{ form.image.id_for_label }}">Recipe Image</label>
+            {{ form.image }}
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.time_minutes.id_for_label }}">Time (minutes)</label>
+                {{ form.time_minutes }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label" for="{{ form.servings.id_for_label }}">Servings</label>
+                {{ form.servings }}
+            </div>
+        </div>
+
+        <div class="mb-3 form-check">
+            {{ form.is_published }}
+            <label class="form-check-label" for="{{ form.is_published.id_for_label }}">Published</label>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label">Products</label>
+            <div class="p-3 border rounded" style="max-height: 300px; overflow-y: auto;">
+                {% for product in form.products %}
+                    <div class="form-check mb-1">
+                        {{ product.tag }}
+                        <label class="form-check-label" for="{{ product.id_for_label }}">
+                            {{ product.choice_label }}
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 py-2">Add Recipe</button>
+    </form>
+
+    <div class="mt-3 text-center">
+        <a href="{% url 'forum:product-add' %}" class="btn btn-secondary">➕ Add New Product</a>
+    </div>
+</div>
+{% endblock %}
