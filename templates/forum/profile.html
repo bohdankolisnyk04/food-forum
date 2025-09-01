@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+    <h2 class="text-center mb-4">{{ user.nickname }}</h2>
+
+    <div class="mb-3">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Reputation:</strong> {{ user.reputation }}</p>
+    </div>
+
+    <div class="d-grid gap-2">
+        <a href="{% url 'password_change' %}" class="btn btn-primary">Change Password</a>
+        <a href="{% url 'forum:profile-edit' %}" class="btn btn-info">Edit Profile</a>
+        <a href="{% url 'forum:saved-recipes' %}" class="btn btn-success">
+            Saved Recipes ({{ saved_recipes_count }})
+        </a>
+        <a href="{% url 'forum:my-recipes' %}" class="btn btn-warning">
+            My Recipes ({{ my_recipes_count }})
+        </a>
+    </div>
+</div>
+{% endblock %}

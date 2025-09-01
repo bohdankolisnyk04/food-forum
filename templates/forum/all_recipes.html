@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">All Recipes</h2>
+
+    <form method="get" class="mb-4">
+        <div class="mb-3">
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Search by title or description" class="form-control">
+        </div>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-3 col-sm-4 col-6">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="products" value="{{ product.id }}" id="prod{{ product.id }}"
+                    {% if product.id in selected_products %}checked{% endif %}>
+                    <label class="form-check-label" for="prod{{ product.id }}">
+                        {{ product.name }}
+                    </label>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Search</button>
+    </form>
+
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if recipe.image %}
+                    <img src="{{ recipe.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <img src="{% static 'images/default_recipe.jpg' %}" class="card-img-top" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title"><a href="{% url 'forum:recipe-detail' recipe.pk %}">{{ recipe.title }}</a></h5>
+                    <p class="card-text text-muted">{{ recipe.description|truncatewords:15 }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="text-center">No recipes found.</p>
+        {% endfor %}
+    </div>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for pid in selected_products %}products={{ pid }}&{% endfor %}page={{ page_obj.previous_page_number }}">Previous</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Previous</span></li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+                {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for pid in selected_products %}products={{ pid }}&{% endfor %}page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% if search_query %}q={{ search_query }}&{% endif %}{% for pid in selected_products %}products={{ pid }}&{% endfor %}page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">Next</span></li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endblock %}
